@@ -1,1 +1,11 @@
-Hello world!
+#social_buttons 
+  %h2 Get Token
+  - if @providers.nil? || @providers.empty?
+    No OAuth providers are configured.
+  - else
+    %ul
+      - @providers.each do |p|
+        %li
+          %a.connect_button{title: "Login with #{p[:name]}", href: "#{p[:path]}"}
+            Login with
+            %em= p[:name]

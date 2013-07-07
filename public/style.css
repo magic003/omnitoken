@@ -1,5 +1,78 @@
+/* global */
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    color: #333333;
+    font-size: 14px;
+    line-height: 1.5;
+    background: none repeat scroll 0 0 #F9F9F9;
+}
+
+h2 {
+    font-size: 2em;
+    line-height: 1.15;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* layout */
 #container {
     margin: 0 auto;
-    margin-top: 40px;
-    width: 900px;
+}
+
+/* the social buttons styles are copied from https://grove.io/login */
+#social_buttons {
+    width: 460px;
+    background: none repeat scroll 0 0 white;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+    margin: 40px auto 20px;
+    padding: 30px;
+}
+
+#social_buttons h2 {
+    border-bottom: 1px solid #F0F0F0;
+    margin-bottom: 20px;
+    margin-top: 0;
+    padding-bottom: 10px
+}
+
+#social_buttons ul {
+    text-align: center;
+    list-style: none outside none;
+    margin: 5px;
+    padding: 5px;
+}
+
+#social_buttons li {
+    margin: 20px;
+    padding-bottom: 15px;
+}
+
+.connect_button {
+    font-size: 16px;
+    background-color: #92C929;
+    background-image: -moz-linear-gradient(center top, #92C929, #6BB135);
+    border: 1px solid #6BB135;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: white;
+    cursor: pointer;
+    padding: 10px 27px;
+    text-align: center;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.connect_button:hover {
+    background-image: -moz-linear-gradient(center top, #9AD42C, #73BD39);
+}
+
+.connect_button:active {
+    background-image: -moz-linear-gradient(center top, #73BD39, #9AD42C);
+}
+
+.connect_button em {
+    font-style: normal;
+    font-weight: bold;
 }
