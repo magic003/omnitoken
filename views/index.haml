@@ -6,6 +6,6 @@
     %ul
       - @providers.each do |p|
         %li
-          %a.connect_button{title: "Login with #{p[:name]}", href: "#{p[:path]}"}
+          %a.connect_button{title: "Login with #{p[:display_name]}", href: "#{p[:path]}"}
             Login with
-            %em= p[:name]
+            %em= p[:display_name]
