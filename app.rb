@@ -1,36 +1,71 @@
 require 'sinatra/base'
+require 'haml'
 require 'omniauth'
-require 'omniauth-twitter'
 
-$:.unshift(File.dirname(__FILE__) + '/lib') unless
-  $:.include?(File.dirname(__FILE__) + '/lib') || $:.include?(File.expand_path(__FILE__ + '/lib'))
-
-require 'get_token'
+require 'yaml'
 
 class GetTokenApp < Sinatra::Base
+  PROVIDER_DIR = 'providers'
+
   enable :sessions
   set :haml, {:format => :html5, :layout => :layout}
 
-  def initialize(app=nil)
-    super(app)
+  get '/' do
+    load_providers() unless loaded?
+    haml :index
+  end
+
+
+  private
+
+  def loaded?
+    not (@providers.nil? || @providers.empty?)
+  end
+
+  def load_providers
     @providers = []
-    Dir.glob(File.join('providers', '*.yml')) do |p|
-      name = File.basename(p, '.yml')
-      if GT::Registry.instance[name]
-        @providers << GT::Registry.instance[name]
-      end
+    Dir.glob(File.join(PROVIDER_DIR, '*.yml')) do |file|
+      name = File.basename(file, '.yml').to_sym
+      strategy = require_strategy(name)
+      @providers << { id: name,
+                      display_name: OmniAuth::Utils.camelize(name),
+                      path: "#{OmniAuth.config.path_prefix}/#{name}",
+                      args: read_strategy_arg(strategy, file)
+                    }
     end
 
+    use_strategy_middleware
+  end
+
+  def use_strategy_middleware
     providers = @providers
     self.class.use OmniAuth::Builder do
       providers.each do |p|
-        provider p.id.to_sym, "S2DJqwT9eer6urLLkLf9A", "x4tALNCgHR1zX9ko1yGARTlQBlQED7OWJOp0F9LHZ0"
+        provider p[:id], *p[:args]
       end
     end
   end
 
-  get '/' do
-    haml :index
+  def read_strategy_arg(strategy, file) 
+    args = []
+    yaml = YAML::load(File.open(file))
+    strategy.args.each do |arg|
+      if yaml[arg.to_s].nil?
+        fail "The #{arg} argument is not provided in #{file}."
+      else
+        args << yaml[arg.to_s]
+      end
+    end
+    args
+  end
+
+  def require_strategy(name)
+    begin
+      require "omniauth-#{name}"
+      OmniAuth::Strategies.const_get(OmniAuth::Utils.camelize(name))
+    rescue LoadError => e
+      fail e, "Could not find matching strategy for #{name}. You may need to install an additional gem (such as omniauth-#{name})."
+    end
   end
 
   run! if app_file == $0
