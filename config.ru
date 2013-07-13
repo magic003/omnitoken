@@ -1,2 +1,2 @@
 require File.dirname(__FILE__) + '/app'
-run GetTokenApp
+run OmniTokenApp

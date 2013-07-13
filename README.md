@@ -1,4 +1,4 @@
-get_token
+OmniToken
 =========
 
 Get OAuth token for various websites
