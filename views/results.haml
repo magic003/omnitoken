@@ -1,0 +1,18 @@
+#results
+  %h2= auth.provider.capitalize
+  %table
+    %tr
+      %td.attr Uid
+      %td= auth.uid
+    - auth.credentials.each do |key, value|
+      %tr
+        %td.attr= key.capitalize
+        %td= value
+    %tr
+      %td.attr Name
+      %td= auth.info.name
+    - args.each do |key, value|
+      %tr
+        %td.attr= key.capitalize
+        %td= value
+  %a{title: 'Home', href: '/'} << Back to Home

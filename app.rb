@@ -10,9 +10,31 @@ class GetTokenApp < Sinatra::Base
   enable :sessions
   set :haml, {:format => :html5, :layout => :layout}
 
-  get '/' do
+  before '/*' do
     load_providers() unless loaded?
+  end
+
+  get '/' do
     haml :index
+  end
+
+  get "#{OmniAuth.config.path_prefix}/:provider/callback" do |p|
+    auth = env['omniauth.auth']
+    provider = get_provider(p)
+    not_found if provider.nil?
+    args = {}
+    provider[:klass].args.each do |arg|
+      args[arg] = provider[:args].shift
+    end
+    haml :results, :locals => { auth: env['omniauth.auth'], args: args}
+  end
+
+  get "#{OmniAuth.config.path_prefix}/failure" do
+    [400, haml(:error, :locals => { message: params[:message] })]
+  end
+
+  not_found do
+    [404, haml(:error, :locals => { message: "Page Not Found" })]
   end
 
 
@@ -20,6 +42,14 @@ class GetTokenApp < Sinatra::Base
 
   def loaded?
     not (@providers.nil? || @providers.empty?)
+  end
+
+  def get_provider(name)
+    provider = nil
+    @providers.each do |p|
+      provider = p if p[:id].eql?(name.to_sym)
+    end
+    provider
   end
 
   def load_providers
@@ -30,7 +60,8 @@ class GetTokenApp < Sinatra::Base
       @providers << { id: name,
                       display_name: OmniAuth::Utils.camelize(name),
                       path: "#{OmniAuth.config.path_prefix}/#{name}",
-                      args: read_strategy_arg(strategy, file)
+                      args: read_strategy_arg(strategy, file),
+                      klass: strategy
                     }
     end
 
