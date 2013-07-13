@@ -1,0 +1,100 @@
+#!/usr/bin/env ruby
+
+# This is the script for running OmniToken application.
+#
+# Usage:
+#   omnitoken [options]
+#   Options:
+#     -a, --add name1,name2,nameN
+#                           Add the config template for specified OAuth providers
+#     -s, --server          Start the web server
+#     -h, --help            Display this help message
+#     -v, --version         Show OmniToken version
+#
+# Author::      Minjie Zha (mailto:minjiezha@gmail.com)
+# Copyright::   Copyright (c) 2013-2014 Minjie Zha
+
+require 'optparse'
+
+begin
+  require 'app'
+rescue LoadError
+  require File.join(File.expand_path(File.dirname(__FILE__)), *%w[.. app])
+end
+
+def on_add(names)
+  return if names.nil?
+  provider_dir = OmniTokenApp::PROVIDER_DIR
+  unless names.empty? || Dir.exists?(provider_dir)
+    $stdout.puts "Creating #{provider_dir} folder"
+    Dir.mkdir(provider_dir) 
+  end
+
+  template_dir = File.join(
+                    File.expand_path(File.dirname(__FILE__)), 
+                    *%w[.. templates])
+  names.each do |n|
+    file = "#{n.downcase}.yml"
+    # check if the template file is available
+    unless File.exists?(File.join(template_dir, file))
+      $stderr.puts "Template for #{n} is not available. "\
+        "Please follow the OmniToken README to create its config file."
+      next
+    end
+
+    # check if the config file is already there
+    if File.exists?(File.join(provider_dir, file))
+       overwrite = loop do
+         $stdout.print("File #{file} already exists. Overwrite it?(y/Y/n/N):")
+         ans = $stdin.gets.chomp
+         break true if 'y'.eql?(ans.downcase)
+         break false if 'n'.eql?(ans.downcase)
+       end 
+       next unless overwrite
+    end
+
+    # copy the template file
+    $stdout.puts "Copying template #{file}"
+    FileUtils.cp(File.join(template_dir, file),
+                 File.join(provider_dir, ''))
+  end
+end
+
+def on_server()
+    puts 'Starting OmniToken web server'
+    OmniTokenApp.run!
+end
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: omnitoken [options]"
+
+  opts.separator ""
+  opts.separator "Options:"
+
+  opts.on('-a', '--add name1,name2,nameN', Array, 'Add the config template for specified OAuth providers') do |names|
+    on_add(names)
+    exit
+  end
+
+  opts.on('-s', '--server', 'Start the web server') do
+    on_server()
+    exit
+  end
+
+  opts.on_tail('-h', '--help', 'Display this help message') do
+    puts opts
+    exit
+  end
+
+  opts.on_tail('-v', '--version', 'Show OmniToken version') do
+    puts OmniTokenApp::VERSION
+    exit
+  end
+
+  opts.on() do
+    puts opts
+    exit
+  end
+
+end.parse!
+

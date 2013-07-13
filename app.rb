@@ -5,6 +5,8 @@ require 'omniauth'
 require 'yaml'
 
 class OmniTokenApp < Sinatra::Base
+  VERSION = '0.0.1'
+
   PROVIDER_DIR = 'providers'
 
   enable :sessions
