@@ -55,26 +55,37 @@ a {
     padding-bottom: 15px;
 }
 
-.connect_button {
+/* This button style is copied from bitbucket's Create repository button */
+.connect_button, .connect_buton:visited {
     font-size: 16px;
-    background-color: #92C929;
-    background-image: -moz-linear-gradient(center top, #92C929, #6BB135);
-    border: 1px solid #6BB135;
-    border-radius: 4px 4px 4px 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    color: white;
+    -moz-box-sizing: border-box;
+    background: linear-gradient(to bottom, #FFFFFF 0%, #F2F2F2 100%) repeat scroll 0 0 transparent;
+    border: 1px solid #CCCCCC;
+    border-radius: 3.01px 3.01px 3.01px 3.01px;
+    color: #333333;
     cursor: pointer;
-    padding: 10px 27px;
-    text-align: center;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    padding: 4px 20px;
+    text-decoration: none;
+    text-shadow: 0 1px 0 white;
+    vertical-align: baseline;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .connect_button:hover {
-    background-image: -moz-linear-gradient(center top, #9AD42C, #73BD39);
+    background: linear-gradient(to bottom, #FFFFFF 0%, #F7F7F7 100%) repeat scroll 0 0 transparent;
+    border-color: #999999;
+    color: #000000;
+    text-decoration: none;
 }
 
 .connect_button:active {
-    background-image: -moz-linear-gradient(center top, #73BD39, #9AD42C);
+    background-color: #F2F2F2;
+    background-image: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1) inset;
+    text-decoration: none;
+    text-shadow: none;
 }
 
 .connect_button em {
