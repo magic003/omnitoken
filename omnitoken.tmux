@@ -7,5 +7,5 @@ resize-pane -t omnitoken:1.1
 send-keys -t omnitoken:1.2 'cd ~/workspace/omnitoken' C-m
 select-pane -t omnitoken:1.1
 new-window -n console -t omnitoken
-send-keys -t omnitoken:2 'cd ~/workspace/omnitoken && rerun "ruby app.rb"' C-m
+send-keys -t omnitoken:2 'cd ~/workspace/omnitoken && rerun "ruby omnitoken_app.rb"' C-m
 select-window -t omnitoken:1

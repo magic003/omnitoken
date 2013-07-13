@@ -17,9 +17,9 @@
 require 'optparse'
 
 begin
-  require 'app'
+  require 'omnitoken_app'
 rescue LoadError
-  require File.join(File.expand_path(File.dirname(__FILE__)), *%w[.. app])
+  require File.join(File.expand_path(File.dirname(__FILE__)), *%w[.. omnitoken_app])
 end
 
 def on_add(names)
