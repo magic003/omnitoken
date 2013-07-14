@@ -18,7 +18,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rack-test"
 
   s.files = Dir['Rakefile', 'bin/omnitoken', 'config.ru', 'omnitoken_app.rb',
-                '{public,templates,views,test}/**/*', 'README*', 'Gemfile']
+                '{public,templates,views,test}/**/*', 'README*', 'Gemfile',
+                'CHANGELOG*']
   s.executables = ['omnitoken']
   s.test_files = Dir['test/**/*']
 end
