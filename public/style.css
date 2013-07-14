@@ -124,11 +124,13 @@ a {
 #results table {
     width: 100%;
     border-spacing: 0;
+    table-layout: fixed;
 }
 
 #results td {
     padding: 8px 0;
     border-bottom: 1px solid #F0F0F0;
+    word-wrap: break-word;
 }
 
 #results td:first-child {

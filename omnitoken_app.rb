@@ -16,8 +16,13 @@ class OmniTokenApp < Sinatra::Base
   set :haml, {:format => :html5, :layout => :layout}
 
   before '/*' do
-    # load providers only once
-    load_providers() unless loaded?
+    # load providers and save in the application level
+    if !settings.respond_to?(:providers) || settings.providers.nil?
+      load_providers()
+      self.class.set :providers, @providers
+    else
+      @providers = settings.providers
+    end
   end
 
   # home page
@@ -32,8 +37,9 @@ class OmniTokenApp < Sinatra::Base
     not_found if provider.nil?
     # get the arguments and provided values for the provider
     args = {}
+    p_args = provider[:args].dup
     provider[:klass].args.each do |arg|
-      args[arg] = provider[:args].shift
+      args[arg] = p_args.shift
     end
     haml :results, :locals => { auth: env['omniauth.auth'], args: args}
   end
@@ -49,11 +55,6 @@ class OmniTokenApp < Sinatra::Base
 
 
   private
-
-  # Checks whether providers have been loaded
-  def loaded?
-    not (@providers.nil? || @providers.empty?)
-  end
 
   # Gets the loaded provider by name
   def get_provider(name)
