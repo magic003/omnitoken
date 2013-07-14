@@ -22,9 +22,11 @@ rescue LoadError
   require File.join(File.expand_path(File.dirname(__FILE__)), *%w[.. omnitoken_app])
 end
 
+# Add provider templates.
 def on_add(names)
   return if names.nil?
   provider_dir = OmniTokenApp::PROVIDER_DIR
+  # create the providers folder if it doesn't exist
   unless names.empty? || Dir.exists?(provider_dir)
     $stdout.puts "Creating #{provider_dir} folder"
     Dir.mkdir(provider_dir) 
@@ -60,6 +62,7 @@ def on_add(names)
   end
 end
 
+# Starts the web server.
 def on_server()
     puts 'Starting OmniToken web server'
     OmniTokenApp.run!

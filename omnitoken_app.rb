@@ -4,26 +4,33 @@ require 'omniauth'
 
 require 'yaml'
 
+# This is the Sinatra application for getting tokens.
 class OmniTokenApp < Sinatra::Base
+  # version number 
   VERSION = '0.0.1'
 
+  # configuration folder for various OAuth providers
   PROVIDER_DIR = 'providers'
 
   enable :sessions
   set :haml, {:format => :html5, :layout => :layout}
 
   before '/*' do
+    # load providers only once
     load_providers() unless loaded?
   end
 
+  # home page
   get '/' do
     haml :index
   end
 
+  # callback route for providers
   get "#{OmniAuth.config.path_prefix}/:provider/callback" do |p|
     auth = env['omniauth.auth']
     provider = get_provider(p)
     not_found if provider.nil?
+    # get the arguments and provided values for the provider
     args = {}
     provider[:klass].args.each do |arg|
       args[arg] = provider[:args].shift
@@ -31,6 +38,7 @@ class OmniTokenApp < Sinatra::Base
     haml :results, :locals => { auth: env['omniauth.auth'], args: args}
   end
 
+  # OAuth failure route
   get "#{OmniAuth.config.path_prefix}/failure" do
     [400, haml(:error, :locals => { message: params[:message] })]
   end
@@ -42,10 +50,12 @@ class OmniTokenApp < Sinatra::Base
 
   private
 
+  # Checks whether providers have been loaded
   def loaded?
     not (@providers.nil? || @providers.empty?)
   end
 
+  # Gets the loaded provider by name
   def get_provider(name)
     provider = nil
     @providers.each do |p|
@@ -54,10 +64,12 @@ class OmniTokenApp < Sinatra::Base
     provider
   end
 
+  # Loads providers from the configuration files
   def load_providers
     @providers = []
     Dir.glob(File.join(PROVIDER_DIR, '*.yml')) do |file|
       name = File.basename(file, '.yml').to_sym
+      # require ruby files for the strategy
       strategy = require_strategy(name)
       @providers << { id: name,
                       display_name: OmniAuth::Utils.camelize(name),
@@ -67,9 +79,11 @@ class OmniTokenApp < Sinatra::Base
                     }
     end
 
+    # set the strategies as a middleware
     use_strategy_middleware
   end
 
+  # Sets the OmniAuth builder as a middleware
   def use_strategy_middleware
     providers = @providers
     self.class.use OmniAuth::Builder do
@@ -79,6 +93,7 @@ class OmniTokenApp < Sinatra::Base
     end
   end
 
+  # Reads the arguments for a strategy from the configuration file.
   def read_strategy_arg(strategy, file) 
     args = []
     yaml = YAML::load(File.open(file))
@@ -92,6 +107,7 @@ class OmniTokenApp < Sinatra::Base
     args
   end
 
+  # Requires the ruby file for a strategy.
   def require_strategy(name)
     begin
       require "omniauth-#{name}"
@@ -101,6 +117,7 @@ class OmniTokenApp < Sinatra::Base
     end
   end
 
+  # Run this application
   run! if app_file == $0
 
 end
