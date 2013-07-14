@@ -7,7 +7,7 @@ require 'yaml'
 # This is the Sinatra application for getting tokens.
 class OmniTokenApp < Sinatra::Base
   # version number 
-  VERSION = '0.0.1'
+  VERSION = '0.0.2'
 
   # configuration folder for various OAuth providers
   PROVIDER_DIR = 'providers'
