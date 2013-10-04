@@ -1,5 +1,8 @@
 # OmniToken Changelog
 
+## v0.0.3
+* Add Pocket support.
+
 ## v0.0.2
 * Just bump the version, because I made a mistake when pushing the gem.
 

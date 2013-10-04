@@ -24,6 +24,7 @@ Follow next section to add some providers. You need to restart the web server af
 To get the token from a provider, a tiny configuration file is required. OmniToken has been tested with following providers and a configuration template is shipped for each of them:
 * Twitter
 * Facebook
+* Pocket
 
 ### Twitter
 First, install the twitter strategy gem:
@@ -46,6 +47,17 @@ Copy the facebook template by running:
 `omnitoken -a facebook`
 
 A `facebook.yml` file will be created in `providers` folder in your working directory. Open it using your favorite editor and fill the fileds. The values can be found on your facebook application page you registered beforehand.
+
+### Pocket
+First, install the facebook strategy gem:
+
+`gem install omniauth-pocket`
+
+Copy the pocket template by running:
+
+`omnitoken -a pocket`
+
+A `pocket.yml` file will be created in `providers` folder in your working directory. Open it using your favorite editor and fill the fileds. The values can be found on your pocket application page you registered beforehand.
 
 ### Others
 Theoretically, OmniToken can be support any provider as long as there is a OmniAuth strategy for it. Please follow these steps to add a provider which doesn't have a shipped template.
